@@ -2,15 +2,12 @@ import os
 from openai import OpenAI
 from dotenv import load_dotenv
 
-# Load environment variables
+
 load_dotenv()
 
 
 class ChatAgent:
-    """
-    A reusable multi-turn chatbot agent.
-    """
-
+    
     def __init__(
             self,
             model="openai/gpt-oss-120b:free",
@@ -18,13 +15,13 @@ class ChatAgent:
             max_turns=5
     ):
 
-        # Create OpenRouter client
+       
         self.client = OpenAI(
             base_url="https://openrouter.ai/api/v1",
             api_key=os.environ["OPENROUTER_API_KEY"],
         )
 
-        # Store selected model
+       
         self.model = model
 
         # Conversation history
@@ -40,10 +37,7 @@ class ChatAgent:
         self.max_turns = max_turns
 
     def call_model(self):
-        """
-        Sends full conversation history
-        to the model.
-        """
+    
 
         response = self.client.chat.completions.create(
             model=self.model,
@@ -57,10 +51,6 @@ class ChatAgent:
         return assistant_reply
 
     def trim_history(self):
-        """
-        Keeps only the last N turns.
-        """
-
         max_messages = self.max_turns * 2
 
         conversation_only = self.messages[1:]
@@ -72,21 +62,14 @@ class ChatAgent:
             )
 
     def reset_history(self):
-        """
-        Clears chat history
-        but keeps system prompt.
-        """
-
+        
         system_message = self.messages[0]
 
         self.messages = [system_message]
 
 
     def chat(self):
-        """
-        Runs terminal chatbot loop.
-        """
-
+       
         print("Chat started. Type 'exit' or 'quit' to stop.\n")
 
         while True:
