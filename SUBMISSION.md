@@ -2,43 +2,24 @@
 
 ## Overview
 
-For Week 1, I built a terminal-based multi-turn chatbot using the OpenRouter API and Python. The chatbot maintains conversation history, supports coherent multi-turn conversations, and demonstrates how stateless APIs can simulate memory by resending conversation history on every request.
+For Week 1, I built a terminal-based chatbot using Python and OpenRouter API. The chatbot supports multi-turn conversations and remembers previous messages by storing conversation history.
 
-## Implementation Details
+## Implementation
 
-I used the `openai` Python SDK with OpenRouter since OpenRouter follows an OpenAI-compatible API structure. To securely manage API credentials, I stored my API key in a `.env` file and loaded it using `python-dotenv`. I also added `.env` to `.gitignore` so that secrets are not accidentally committed.
+I used the `openai` SDK with OpenRouter and loaded the API key securely through a `.env` file using `python-dotenv`. I also added `.env` to `.gitignore` so the API key is not exposed.
 
-The chatbot was implemented using a `ChatAgent` Python class to keep the code modular and reusable. The model is configurable through the constructor, making the chatbot model-agnostic.
+I implemented the chatbot using a `ChatAgent` class. The chatbot stores conversation history using `system`, `user`, and `assistant` roles and sends the full history during every API call.
 
-The chatbot supports:
+Features implemented:
+- Multi-turn conversation
+- Conversation memory
+- Exit commands (`exit`, `quit`)
+- `/reset` to clear history
+- `/tokens` to check token usage
+- Rolling memory buffer to limit conversation size
 
-* Multi-turn conversation memory
-* Conversation history using role-based messages (`system`, `user`, `assistant`)
-* Exit commands (`exit`, `quit`)
-* Resetting chat history using `/reset`
-* Token usage inspection using `/tokens`
+## What I Learned
 
-## Memory Handling
+This assignment helped me understand that LLM APIs are stateless and only remember things if previous messages are sent again. I also learned about API key safety, token usage, and how chatbot memory works.
 
-Since the API is stateless, the chatbot manually stores conversation history in a `messages` list and resends the full conversation during every API call.
-
-To prevent unlimited context growth and increasing token usage, I implemented a rolling memory buffer using a maximum turn limit. When the conversation exceeds the configured limit, the oldest user-assistant message pairs are removed while preserving the system prompt.
-
-I also tested context loss by resetting the conversation history and observing how the chatbot no longer remembered earlier information.
-
-## Challenges Faced
-
-One issue I encountered was model availability on OpenRouter. Some models mentioned in the instructions were unavailable, so I switched to an available free model.
-
-Another challenge was understanding how stateless APIs work. Initially, I assumed the model remembers previous messages, but after experimenting with resetting history, I understood that memory only exists through the conversation history passed into the API.
-
-## Learnings
-
-This assignment helped me understand:
-
-* How chat completion APIs work
-* API key safety and environment variables
-* Statelessness in LLM APIs
-* Role-based message formatting
-* Managing conversation memory and token growth
-* Structuring Python code using classes
+One issue I faced was model availability on OpenRouter, so I switched to another free model.
